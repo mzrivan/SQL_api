@@ -44,7 +44,7 @@ public class DataHelper {
         }
     }
 
-    public static void getValidCards(User user) throws SQLException {
+    public static Cards getValidCards(User user) throws SQLException {
         var faker = new Faker();
         var runner = new QueryRunner();
         var dataSQL = "INSERT INTO cards(id, user_id, number, balance_in_kopecks) VALUES (?, ?,?,?);";
@@ -59,6 +59,11 @@ public class DataHelper {
         ) {
             runner.update(conn, dataSQL, id, user_id, number, balance_in_kopecks);
         }
+        return new Cards(
+                id,
+                number,
+                balance_in_kopecks
+        );
     }
 
 }

@@ -9,16 +9,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static ru.netology.data.DataHelper.getValidCards;
+import static ru.netology.test.LoginAPi.Login.loginUser;
+import static ru.netology.test.VerificationAPI.Verification.getVerification;
 
 public class TransferTest {
 
-   // User user;
 
     @Test
     void shouldAuthorizationValidUserValidCode() throws SQLException {
 
         User user = DataHelper.getValidUser();
         getValidCards(user);
+        loginUser(user);
+        getVerification(user);
+        Cards card1 = getValidCards(user);
     }
 
 
