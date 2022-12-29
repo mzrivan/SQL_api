@@ -25,15 +25,15 @@ import static ru.netology.test.VerificationAPI.Verification.getVerification;
 public class TransferTest {
 
 
-    @Test
-    void shouldAuthorizationValidUserValidCode() throws SQLException {
-
-        User user1 = DataHelper.getValidUser();
-        getValidCards(user1);
-        loginUser(user1);
-        String token = getVerification(user1);
-        Cards card1 = getValidCards(user1);
-    }
+//    @Test
+//    void shouldAuthorizationValidUserValidCode() throws SQLException {
+//
+//        User user1 = DataHelper.getValidUser();
+//        getValidCards(user1);
+//        loginUser(user1);
+//        String token = getVerification(user1);
+//        Cards card1 = getValidCards(user1);
+//    }
 
     @ParameterizedTest
     @CsvSource(value = {

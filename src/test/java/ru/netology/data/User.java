@@ -2,11 +2,11 @@ package ru.netology.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-//import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
-//@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private String id;
     private String login;

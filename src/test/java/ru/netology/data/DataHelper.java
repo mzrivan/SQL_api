@@ -38,7 +38,7 @@ public class DataHelper {
         try (
                 var conn = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
+                )
         ) {
             return runner.query(conn, dataSQL, new ScalarHandler<>(), user.getId());
         }
@@ -51,11 +51,11 @@ public class DataHelper {
         String id = faker.regexify("[0-9]{10}");
         String user_id = user.getId();
         String number = faker.regexify("5559 [0-9]{4} [0-9]{4} [0-9]{4}");
-        String balance_in_kopecks = faker.regexify("[0-9]{10}");
+        String balance_in_kopecks = faker.regexify("[0-9]{8}");
         try (
                 var conn = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
+                )
         ) {
             runner.update(conn, dataSQL, id, user_id, number, balance_in_kopecks);
         }
@@ -65,11 +65,11 @@ public class DataHelper {
                 balance_in_kopecks
         );
     }
-    public static int getCurrentBalance (String cardNumber) throws SQLException {
+
+    public static int getCurrentBalance(String cardNumber) throws SQLException {
         var runner = new QueryRunner();
         var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
-        var dataSQLId="SELECT balance_in_kopecks FROM cards WHERE number =?";
-        int balance =runner.query(conn, dataSQLId, new ScalarHandler<>(),cardNumber);;
-        return balance;
+        var dataSQLId = "SELECT balance_in_kopecks FROM cards WHERE number =?";
+        return runner.query(conn, dataSQLId, new ScalarHandler<>(), cardNumber);
     }
 }
