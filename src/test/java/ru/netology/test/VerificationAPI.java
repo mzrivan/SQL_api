@@ -21,14 +21,18 @@ public class VerificationAPI {
             .setContentType(ContentType.JSON)
             .log(LogDetail.ALL)
             .build();
-    private static void sendRequest(VerificationDto user) {
-        given() // "дано"
-                .spec(requestSpec) // указываем, какую спецификацию используем
-                .body(user) // передаём в теле объект, который будет преобразован в JSON
-                .when() // "когда"
-                .post("/api/auth/verification") // на какой путь, относительно BaseUri отправляем запрос
-                .then() // "тогда ожидаем"
-                .statusCode(200); // код 200 OK
+
+    private static String sendRequest(VerificationDto user) {
+        return
+                given() // "дано"
+                        .spec(requestSpec) // указываем, какую спецификацию используем
+                        .body(user) // передаём в теле объект, который будет преобразован в JSON
+                        .when() // "когда"
+                        .post("/api/auth/verification") // на какой путь, относительно BaseUri отправляем запрос
+                        .then() // "тогда ожидаем"
+                        .statusCode(200) // код 200 OK
+                        .extract()
+                        .path("token");
     }
 
     public static class Verification {
@@ -40,9 +44,9 @@ public class VerificationAPI {
             );
         }
 
-        public static void getVerification(User user) throws SQLException {
+        public static String getVerification(User user) throws SQLException {
             var verificationUser = getCode(user);
-            sendRequest(verificationUser);
+            return sendRequest(verificationUser);
         }
     }
 

@@ -65,5 +65,11 @@ public class DataHelper {
                 balance_in_kopecks
         );
     }
-
+    public static int getCurrentBalance (String cardNumber) throws SQLException {
+        var runner = new QueryRunner();
+        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
+        var dataSQLId="SELECT balance_in_kopecks FROM cards WHERE number =?";
+        int balance =runner.query(conn, dataSQLId, new ScalarHandler<>(),cardNumber);;
+        return balance;
+    }
 }
