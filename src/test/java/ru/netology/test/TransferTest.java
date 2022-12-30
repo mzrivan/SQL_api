@@ -1,6 +1,5 @@
 package ru.netology.test;
 
-import groovy.transform.TailRecursive;
 import org.apache.commons.dbutils.QueryRunner;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -16,24 +15,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.netology.data.DataHelper.getCurrentBalance;
-import static ru.netology.data.DataHelper.getValidCards;
+import static ru.netology.data.DataHelper.*;
 import static ru.netology.test.LoginAPi.Login.loginUser;
-import static ru.netology.test.TransferAPI.makeTransfer;
+import static ru.netology.test.TransferAPI.*;
 import static ru.netology.test.VerificationAPI.Verification.getVerification;
 
 public class TransferTest {
-
-
-//    @Test
-//    void shouldAuthorizationValidUserValidCode() throws SQLException {
-//
-//        User user1 = DataHelper.getValidUser();
-//        getValidCards(user1);
-//        loginUser(user1);
-//        String token = getVerification(user1);
-//        Cards card1 = getValidCards(user1);
-//    }
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -43,15 +30,14 @@ public class TransferTest {
     void shouldTransferMoneyFromCardsOneLoginVerificationUser(int amount) throws SQLException {
 
         User user1 = DataHelper.getValidUser();
-        getValidCards(user1);
         loginUser(user1);
         String token = getVerification(user1);
-        Cards card1 = getValidCards(user1);
-        Cards card2 = getValidCards(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
 
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
-        Transfer transfer = new Transfer(card1.getNumber(), card1.getNumber() , Integer.toString(amount));
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
         makeTransfer(transfer, token);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
@@ -59,6 +45,147 @@ public class TransferTest {
         assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1",
+            "2",
+    })
+    void shouldTransferMoneyFromCardsOfTwoUsers(int amount) throws SQLException {
+
+        User user1 = DataHelper.getValidUser();
+        User user2 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user2);
+
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeTransfer(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+    @Test
+    void shouldTransferAllMoneyFromCard1LoginVerificationUser() throws SQLException {
+
+        User user1 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
+
+        int amount = Integer.parseInt(card1.getBalance());
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeTransfer(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+
+    @Test
+    void shouldNotTransferMoneyMoreThenThereIsOnBalance() throws SQLException {
+
+        User user1 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
+
+        int amount = Integer.parseInt(card1.getBalance())+1;
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeTransferInvalidAmount(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+
+    @Test
+    void shouldNotTransferNegativeValue() throws SQLException {
+
+        User user1 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
+
+        int amount = -1;
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeTransferInvalidAmount(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+
+    @Test
+    void shouldNotTransferZeroValue() throws SQLException {
+
+        User user1 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
+
+        int amount = 0;
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeTransferInvalidAmount(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+    @Test
+    void shouldNotTransferWithInvalidToken() throws SQLException {
+
+        int amount = 1000;
+        User user1 = DataHelper.getValidUser();
+        loginUser(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user1);
+
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
+        makeInvalidTransfer(transfer, "12345");
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+
+    @Test
+    void shouldNotTransferMoneyFromCardsOfTwoUsersByNotOwnerCard() throws SQLException {
+
+        int amount = 1;
+        User user1 = DataHelper.getValidUser();
+        User user2 = DataHelper.getValidUser();
+        loginUser(user1);
+        String token = getVerification(user1);
+        Cards card1 = getValidCard(user1);
+        Cards card2 = getValidCard(user2);
+
+        var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
+        var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
+        Transfer transfer = new Transfer(card2.getNumber(), card1.getNumber() , Integer.toString(amount));
+        makeInvalidTransfer(transfer, token);
+        var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
+        var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
 
     @AfterAll
     public static void deleteData() throws SQLException {

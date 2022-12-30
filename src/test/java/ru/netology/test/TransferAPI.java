@@ -30,5 +30,29 @@ public class TransferAPI {
                 .statusCode(200);
     }
 
+    public static void makeTransferInvalidAmount(Transfer transfer, String token) {
+        given() // "дано"
+                .spec(requestSpec) // указываем, какую спецификацию используем
+                .headers(
+                        "Authorization",
+                        "Bearer " + token)
+                .body(transfer) // передаём в теле объект, который будет преобразован в JSON
+                .when() // "когда"
+                .post("/api/transfer") // на какой путь, относительно BaseUri отправляем запрос
+                .then() // "тогда ожидаем"
+                .statusCode(501);
+    }
+    public static void makeInvalidTransfer(Transfer transfer, String token) {
+        given() // "дано"
+                .spec(requestSpec) // указываем, какую спецификацию используем
+                .headers(
+                        "Authorization",
+                        "Bearer " + token)
+                .body(transfer) // передаём в теле объект, который будет преобразован в JSON
+                .when() // "когда"
+                .post("/api/transfer") // на какой путь, относительно BaseUri отправляем запрос
+                .then() // "тогда ожидаем"
+                .statusCode(401);
+    }
 
 }
