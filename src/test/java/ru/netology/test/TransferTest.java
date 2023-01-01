@@ -37,8 +37,8 @@ public class TransferTest {
 
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransfer(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 200);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
@@ -61,13 +61,14 @@ public class TransferTest {
 
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransfer(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 200);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
         assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
     }
+
     @Test
     void shouldTransferAllMoneyFromCard1LoginVerificationUser() throws SQLException {
 
@@ -80,8 +81,8 @@ public class TransferTest {
         int amount = Integer.parseInt(card1.getBalance());
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance()) - amount;
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance()) + amount;
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransfer(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 200);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
@@ -97,11 +98,11 @@ public class TransferTest {
         Cards card1 = getValidCard(user1);
         Cards card2 = getValidCard(user1);
 
-        int amount = Integer.parseInt(card1.getBalance())+1;
+        int amount = Integer.parseInt(card1.getBalance()) + 1;
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransferInvalidAmount(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 501);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
@@ -120,8 +121,8 @@ public class TransferTest {
         int amount = -1;
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransferInvalidAmount(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 501);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
@@ -140,13 +141,14 @@ public class TransferTest {
         int amount = 0;
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeTransferInvalidAmount(transfer, token);
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 501);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
         assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
     }
+
     @Test
     void shouldNotTransferWithInvalidToken() throws SQLException {
 
@@ -158,8 +160,8 @@ public class TransferTest {
 
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
-        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber() , Integer.toString(amount));
-        makeInvalidTransfer(transfer, "12345");
+        Transfer transfer = new Transfer(card1.getNumber(), card2.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, "12345", 401);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
@@ -179,8 +181,8 @@ public class TransferTest {
 
         var expectedBalanceFirstCard = Integer.parseInt(card1.getBalance());
         var expectedBalanceSecondCard = Integer.parseInt(card2.getBalance());
-        Transfer transfer = new Transfer(card2.getNumber(), card1.getNumber() , Integer.toString(amount));
-        makeInvalidTransfer(transfer, token);
+        Transfer transfer = new Transfer(card2.getNumber(), card1.getNumber(), Integer.toString(amount));
+        makeTransfer(transfer, token, 401);
         var actualBalanceFirstCard = getCurrentBalance(card1.getNumber());
         var actualBalanceSecondCard = getCurrentBalance(card2.getNumber());
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);

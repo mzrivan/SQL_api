@@ -48,13 +48,17 @@
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
-    <filter-actions connection-id="588c9433-a90a-45b1-af57-b101de219fe5" dataset="app.users" active-filter-id="75c3e342-3edd-4723-8a52-743268f67ece">
+    <filter-actions connection-id="588c9433-a90a-45b1-af57-b101de219fe5" dataset="app.users" active-filter-id="">
       <filter id="75c3e342-3edd-4723-8a52-743268f67ece" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
     <filter-actions connection-id="588c9433-a90a-45b1-af57-b101de219fe5" dataset="app.card_transactions" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="588c9433-a90a-45b1-af57-b101de219fe5" dataset="app.cards" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="d05ce543-7dc6-46fe-ad77-91f470cc2ac1" dataset="app.auth_codes" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="d05ce543-7dc6-46fe-ad77-91f470cc2ac1" dataset="app.users" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="d05ce543-7dc6-46fe-ad77-91f470cc2ac1" dataset="app.card_transactions" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="d05ce543-7dc6-46fe-ad77-91f470cc2ac1" dataset="app.cards" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -172,20 +176,20 @@
       <connection id="d05ce543-7dc6-46fe-ad77-91f470cc2ac1" active="true" signed="true">
         <database>
           <name value="Connection 1" />
-          <description value="" />
+          <description value="app" />
           <database-type value="MYSQL" />
           <config-type value="BASIC" />
-          <database-version value="9999.0" />
+          <database-version value="8.0" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
           <host value="localhost" />
           <port value="3306" />
-          <database value="mysql" />
+          <database value="app" />
           <type value="USER_PASSWORD" />
-          <user value="" />
-          <deprecated-pwd value="" />
+          <user value="app" />
+          <deprecated-pwd value="cGFzcw==" />
         </database>
         <properties>
           <auto-commit value="false" />
