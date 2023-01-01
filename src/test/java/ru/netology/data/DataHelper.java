@@ -51,7 +51,7 @@ public class DataHelper {
         String id = faker.regexify("[0-9]{10}");
         String user_id = user.getId();
         String number = faker.regexify("5559 [0-9]{4} [0-9]{4} [0-9]{4}");
-        String balance_in_kopecks = faker.regexify("[0-9]{8}");
+        String balance_in_kopecks = faker.regexify("[0-9]{6}00");
         try (
                 var conn = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/app", "app", "pass"
