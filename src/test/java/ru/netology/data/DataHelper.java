@@ -1,75 +1,39 @@
 package ru.netology.data;
 
 import com.github.javafaker.Faker;
-import lombok.Data;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import static ru.netology.data.DBhelper.queryUpdate;
 
-@Data
 public class DataHelper {
 
     private DataHelper() {
     }
 
-    public static User getValidUser() throws SQLException {
+    public static User getValidUser() {
         var faker = new Faker();
-        var runner = new QueryRunner();
         var dataSQL = "INSERT INTO users(id, login, password, status) VALUES (?, ?,?,?);";
         String id = faker.regexify("[0-9]{10}");
         String login = faker.name().username();
         String password = "$2a$10$7yHUvStzBubZ1s7kZrwYGujHyNzGt5rmv29o.vgNBkqwQ.5bzKH9i";
         String status = "active";
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
-        ) {
-            runner.update(conn, dataSQL, id, login, password, status);
-        }
+        String[] userParams = {id, login, password, status};
+        queryUpdate(dataSQL, userParams);
         return new User(id, login, "qwerty123", status);
     }
 
-    public static String getVerificationCode(User user) throws SQLException {
-        var runner = new QueryRunner();
-        var dataSQL = "SELECT code FROM auth_codes WHERE user_id = ?";
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                )
-        ) {
-            return runner.query(conn, dataSQL, new ScalarHandler<>(), user.getId());
-        }
-    }
-
-    public static Cards getValidCard(User user) throws SQLException {
+    public static Cards getValidCard(User user) {
         var faker = new Faker();
-        var runner = new QueryRunner();
         var dataSQL = "INSERT INTO cards(id, user_id, number, balance_in_kopecks) VALUES (?, ?,?,?);";
         String id = faker.regexify("[0-9]{10}");
         String user_id = user.getId();
         String number = faker.regexify("5559 [0-9]{4} [0-9]{4} [0-9]{4}");
         String balance_in_kopecks = faker.regexify("[0-9]{6}00");
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                )
-        ) {
-            runner.update(conn, dataSQL, id, user_id, number, balance_in_kopecks);
-        }
+        String[] userParams = {id, user_id, number, balance_in_kopecks};
+        queryUpdate(dataSQL, userParams);
         return new Cards(
                 id,
                 number,
                 balance_in_kopecks
         );
-    }
-
-    public static int getCurrentBalance(String cardNumber) throws SQLException {
-        var runner = new QueryRunner();
-        var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
-        var dataSQLId = "SELECT balance_in_kopecks FROM cards WHERE number =?";
-        return runner.query(conn, dataSQLId, new ScalarHandler<>(), cardNumber);
     }
 }

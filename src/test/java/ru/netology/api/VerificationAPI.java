@@ -1,4 +1,4 @@
-package ru.netology.test;
+package ru.netology.api;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -7,10 +7,8 @@ import io.restassured.specification.RequestSpecification;
 import lombok.Value;
 import ru.netology.data.User;
 
-import java.sql.SQLException;
-
 import static io.restassured.RestAssured.given;
-import static ru.netology.data.DataHelper.getVerificationCode;
+import static ru.netology.data.DBhelper.getVerificationCode;
 
 public class VerificationAPI {
 
@@ -37,14 +35,14 @@ public class VerificationAPI {
 
     public static class Verification {
 
-        public static VerificationDto getCode(User user) throws SQLException {
+        public static VerificationDto getCode(User user) {
             return new VerificationDto(
                     user.getLogin(),
                     getVerificationCode(user)
             );
         }
 
-        public static String getVerification(User user) throws SQLException {
+        public static String getVerification(User user) {
             var verificationUser = getCode(user);
             return sendRequest(verificationUser);
         }
