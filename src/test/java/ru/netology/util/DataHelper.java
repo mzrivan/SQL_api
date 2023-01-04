@@ -1,8 +1,10 @@
-package ru.netology.data;
+package ru.netology.util;
 
 import com.github.javafaker.Faker;
+import ru.netology.data.Cards;
+import ru.netology.data.User;
 
-import static ru.netology.data.DBhelper.queryUpdate;
+import static ru.netology.util.DBhelper.queryUpdate;
 
 public class DataHelper {
 

@@ -1,7 +1,8 @@
-package ru.netology.data;
+package ru.netology.util;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+import ru.netology.data.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
